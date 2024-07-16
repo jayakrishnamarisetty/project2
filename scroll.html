@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+    <style>
+       body{
+            height:95vh;
+            display: flex;
+        }
+        .parent{
+            width:80%;
+            height:50vh;
+            display: flex;
+            background-color: aqua;
+            border: 1px solid black;
+            justify-content: center;
+            align-items: center;
+        }
+        .child{
+            width:150px;
+            height:250px;
+            border: 2px solid red;
+            /* display: flex;    */
+            margin: 10px;
+            
+        }
+        .child:nth-child(even){
+            background-color: red;
+        }
+        .child:nth-child(odd){
+            background-color: rgb(22, 18, 18);
+        }
+        li button{
+            display: none;
+        }
+        .slick-dots{
+            display: flex;
+            position: absolute;
+            bottom: -17px;
+            gap: 15px;
+            left:50%;
+        }
+        .slick-active{
+            color: red;
+        }
+        .slick-center{
+            transition: scale 1s;
+            transform: scale(1.06);
+        }
+    </style>
+    
+</head>
+
+<body>
+    <div class="parent">
+        <div class="child">1</div>
+        <div class="child">2</div>
+        <div class="child">3</div>
+        <div class="child">4</div>
+        <div class="child">5</div>
+        <div class="child">6</div>
+    </div>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script>
+            $('.parent').slick({
+                infinite: true,
+                // speed: 800,
+                dots:true,
+                slidesToShow: 3,
+                centerMode:true,
+                // centerPadding:'60px',
+                prevArrow:`<buuton><</button>`,
+                nextArrow:`<button>></button>`,
+                slidesToScroll: 2,
+                // autoplaySpeed:2
+            });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Table with Update and Delete</title>
+    <style>
+        body {
+            width: 100%;
+            height: 100%;
+            background: url('../images/14.avif') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+        }
+        .btn {
+            padding: 15px 40px;
+            border: none;
+            outline: none;
+            color: #fff;
+            cursor: pointer;
+            position: relative;
+            z-index: 0;
+            border-radius: 12px;
+            background-color: #333;
+            font-size: 16px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: background-color 0.3s;
+        }
+        .btn::after {
+            content: "";
+            z-index: -1;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #333;
+            left: 0;
+            top: 2px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .btn::before {
+            content: "";
+            background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #ff00c8, #ff0000);
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            background-size: 600%;
+            z-index: -1;
+            width: calc(100% + 4px);
+            height: calc(100% + 4px);
+            filter: blur(8px);
+            animation: jk 20s linear infinite;
+            transition: opacity .3s ease-in-out;
+            border-radius: 12px;
+            opacity: 0.8;
+        }
+        @keyframes jk {
+            0% {background-position: 0 0;}
+            50% {background-position: 400% 0;}
+            100% {background-position: 0 0;}
+        }
+        .btn:hover::before {
+            opacity: 1;
+        }
+        .btn:active::after {
+            background: transparent;
+        }
+        .btn:active {
+            color: #000;
+            font-weight: bold;
+        }
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin-top: 20px;
+            background-color: black;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            opacity: 0.9;
+            transform: translateY(0);
+            transition: opacity 0.3s, transform 0.3s;
+            animation: fadeIn 0.5s ease;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid white;
+            transition: background-color 0.3s;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: black;
+        }
+        tr:nth-child(even) {
+            background-color: #333;
+        }
+        tr:nth-child(odd) {
+            background-color: #222;
+        }
+        tr:hover {
+            background-color: purple;
+            transform: scale(1.02);
+            transition: transform 0.3s ease;
+        }
+        .update-btn, .delete-btn {
+            background-color: transparent;
+            color: white;
+            border: 1px solid transparent;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s, transform 0.2s;
+        }
+        .update-btn:hover, .delete-btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-color: white;
+        }
+        .update-btn:active, .delete-btn:active {
+            transform: scale(0.95);
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 0.9;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="btn" onclick="createTable()">Add Row</button>
+    <script>
+        let data = [
+            { name: 'John', age: 18, email: 'john@example.com' },
+            { name: 'Rajesh', age: 19, email: 'rajesh@example.com' },
+            { name: 'Raju', age: 20, email: 'raju@example.com' },
+            { name: 'mahi', age: 25, email: 'mahi@gmail.com' },
+            { name: 'chandhu', age: 26, email: 'adapa@gmail.com' },
+            { name: 'siddhu', age: 65, email: 'reddy@gmail.com' }
+        ];
+
+        function createTable() {
+            let rug = document.getElementById("dataTable");
+            if (rug) {
+                rug.remove();
+            }
+            let table = document.createElement("table");
+            table.id = "dataTable";
+
+            let headerRow = document.createElement("tr");
+            let headers = ["Name", "Age", "Email", "Actions"];
+            for (let i = 0; i < headers.length; i++) {
+                let th = document.createElement("th");
+                th.appendChild(document.createTextNode(headers[i]));
+                headerRow.appendChild(th);
+            }
+            table.appendChild(headerRow);
+
+            for (let i = 0; i < data.length; i++) {
+                let row = document.createElement("tr");
+
+                let cell1 = document.createElement("td");
+                let cell2 = document.createElement("td");
+                let cell3 = document.createElement("td");
+                cell1.textContent = data[i].name;
+                cell2.textContent = data[i].age;
+                cell3.textContent = data[i].email;
+
+                let actionCell = document.createElement("td");
+
+                let updateButton = document.createElement("button");
+                updateButton.textContent = "Update";
+                updateButton.classList.add("update-btn");
+                updateButton.onclick = function() {
+                    updateRow(row, i);
+                };
+                actionCell.appendChild(updateButton);
+
+                let deleteButton = document.createElement("button");
+                deleteButton.textContent = "Delete";
+                deleteButton.classList.add("delete-btn");
+                deleteButton.onclick = function() {
+                    deleteRow(i);
+                };
+                actionCell.appendChild(deleteButton);
+
+                row.appendChild(cell1);
+                row.appendChild(cell2);
+                row.appendChild(cell3);
+                row.appendChild(actionCell);
+                table.appendChild(row);
+            }
+            document.body.appendChild(table);
+        }
+
+        function addRow() {
+            let name = prompt("Enter name:");
+            let age = prompt("Enter age:");
+            let email = prompt("Enter email:");
+
+            if (name && age && email) {
+                data.push({ name: name, age: parseInt(age), email: email });
+                createTable();
+            } else {
+                alert("All fields are required!");
+            }
+        }
+
+        function updateRow(row, index) {
+            let name = prompt("Update name:", data[index].name);
+            let age = prompt("Update age:", data[index].age);
+            let email = prompt("Update email:", data[index].email);
+
+            if (name && age && email) {
+                data[index] = { name: name, age: parseInt(age), email: email };
+                row.cells[0].textContent = name;
+                row.cells[1].textContent = age;
+                row.cells[2].textContent = email;
+            } else {
+                alert("All fields are required!");
+            }
+        }
+
+        function deleteRow(index) {
+            data.splice(index, 1);
+            createTable();
+        }
+    </script>
+</body>
+</html>
